@@ -3,5 +3,9 @@ gschem-goodies
 
 Guile Scheme scripts for gEDA/gaf.
 
+gschem
+------
   * move-and-rotate.scm
     Multiple copy, move, and rotate selected elements
+  * swap-attributes.scm
+    Swap values of two selected attributes

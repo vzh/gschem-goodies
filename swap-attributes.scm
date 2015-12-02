@@ -1,0 +1,16 @@
+(use-modules (gschem selection))
+
+(define (aswap a b)
+  (let ((va (attrib-value a))
+        (vb (attrib-value b)))
+    (set-attrib-value! a vb)
+    (set-attrib-value! b va)))
+
+(define (swap)
+  (let ((attribs (page-selection (active-page))))
+    (if (= (length attribs) 2)
+      (if (and (attribute? (car  attribs))
+               (attribute? (cadr attribs)))
+        (apply aswap attribs)
+        (gschem-msg "Select only attributes!"))
+      (gschem-msg "Number of selected attributes must be 2!"))))
