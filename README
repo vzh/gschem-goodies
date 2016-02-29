@@ -9,3 +9,5 @@ gschem
     Multiple copy, move, and rotate selected elements
   * swap-attributes.scm
     Swap values of two selected attributes
+  * moddate.scm
+    Auto-update the modification-date= attribute on saving
