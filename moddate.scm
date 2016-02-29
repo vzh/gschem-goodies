@@ -1,6 +1,7 @@
 (use-modules (geda page)
              (geda object)
              (geda attrib)
+             (srfi srfi-1)
              (srfi srfi-19))
 
 ;;; See guile info on how to change the date-time format
