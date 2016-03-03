@@ -3,11 +3,20 @@ gschem-goodies
 
 Guile Scheme scripts for gEDA/gaf.
 
-gschem
-------
+Scripts for gschem
+------------------
   * move-and-rotate.scm
     Multiple copy, move, and rotate selected elements
   * swap-attributes.scm
     Swap values of two selected attributes
   * moddate.scm
     Auto-update the modification-date= attribute on saving
+
+Installation
+------------
+To install all Scheme scripts type:
+  make install
+To uninstall them type:
+  make uninstall
+To choose some of the scripts type, e.g.:
+  make scripts="script-name-1.scm script-name-2.scm ..." install
