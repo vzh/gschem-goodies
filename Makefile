@@ -1,6 +1,6 @@
 userrcdir = ${HOME}/.gEDA
 gschemrc = ${userrcdir}/gschemrc
-scripts = moddate.scm keymap-translation.scm
+scripts = moddate.scm keymap-translation.scm sym-cache.scm
 
 .PHONY: all install uninstall
 
