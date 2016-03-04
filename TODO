@@ -1,0 +1,5 @@
+sym-cache.scm
+=============
+  * Caching should not happen on "File->Save as" or on
+    "File->Save" (for new files) if the user cancelled the
+    operation.

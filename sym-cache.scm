@@ -56,3 +56,16 @@
 ;;; Save all symbols of all open pages to cache directory
 (define (cache-symbols)
   (for-each cache-page-symbols (active-pages)))
+
+;;; Use hooks to cache symbols automatically after page saving
+(add-hook!
+ post-save-page-hook
+ (lambda ()
+   (gschem-log "Caching used symbols.\n")
+   (cache-page-symbols (active-page))))
+
+(add-hook!
+ post-save-page-as-hook
+ (lambda ()
+   (gschem-log "Caching used symbols.\n")
+   (cache-page-symbols (active-page))))

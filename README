@@ -14,6 +14,11 @@ Scripts for gschem
 
 Installation
 ------------
+First add the following line in the beginning of your
+~/.gEDA/gschemrc (to make sure it works before other loading
+commands):
+  (add-to-load-path "path-to-the-repository-on-your-system")
+
 To install all Scheme scripts type:
   make install
 To uninstall them type:

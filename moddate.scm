@@ -2,7 +2,8 @@
              (geda object)
              (geda attrib)
              (srfi srfi-1)
-             (srfi srfi-19))
+             (srfi srfi-19)
+             (gschem goodies hook))
 
 ;;; See guile info on how to change the date-time format
 (define date-time-format "~Y-~m-~d ~H:~M")
@@ -51,19 +52,17 @@
     (and attrib-list
          (for-each set-current-date-time-value! attrib-list))))
 
-;;; Save action procedures to use them later
-(define &stock-file-save &file-save)
-(define &stock-file-save-as &file-save-as)
-
-;;; Redefine them
-(define (&file-save)
+(add-hook!
+ pre-save-page-hook
+ (lambda ()
   ;; update date-time attribute(s) if only the active page has
   ;; been changed
   (and (page-dirty? (active-page))
-       (update-modification-date! (active-page)))
-  (&stock-file-save))
+       (update-modification-date! (active-page)))))
 
-(define (&file-save-as)
-  ;; unconditionally update date-time attribute(s)
-  (update-modification-date! (active-page))
-  (&stock-file-save-as))
+(add-hook!
+ pre-save-page-as-hook
+ (lambda ()
+   ;; unconditionally update date-time attribute(s)
+   (update-modification-date! (active-page))))
+
