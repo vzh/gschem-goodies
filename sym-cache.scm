@@ -3,8 +3,21 @@
 
 (use-modules (geda page) (geda object) (srfi srfi-1))
 
-;;; Predefined cache dir name
-(define cache-dir-name "sym")
+;;; Cache dir name
+(define cache-dir-name #f)
+
+;;; Enables symbol caching using DIRNAME as the cache directory
+(define (enable-symbol-cache dirname)
+  (and (string? dirname)
+       (set! cache-dir-name dirname)))
+
+;;; Disables symbol caching
+(define (disable-symbol-cache)
+  (set! cache-dir-name #f))
+
+;;; Predicate to check if symbol caching is enabled
+(define (is-symbol-cache-enabled?)
+  (not (not cache-dir-name)))
 
 ;;; Stolen from the 'fold' function description in the guile info manual
 (define (delete-adjacent-duplicates ls)
@@ -74,9 +87,11 @@
 
 ;;; Save all symbols of PAGE to cache directory
 (define (cache-page-symbols page)
-  (for-each
-   cache-symbol
-   (get-unique-component-names page)))
+  (if (is-symbol-cache-enabled?)
+      (for-each
+       cache-symbol
+       (get-unique-component-names page))
+      (gschem-log "Symbol caching is disabled.\n")))
 
 ;;; Save all symbols of all open pages to cache directory
 (define (cache-symbols)
