@@ -40,6 +40,7 @@
     (attach-attribs! object attrib)
     (set-object-color! attrib color)))
 
+;;; Copies OBJECT to PAGE preserving with its attached attributes
 (define (copy-object-with-attachment! object #;to page)
   (and (not (attrib-attachment object))
        (let ((new-object (copy-object object))
