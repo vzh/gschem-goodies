@@ -8,12 +8,15 @@
 
 ;;; Stolen from the 'fold' function description in the guile info manual
 (define (delete-adjacent-duplicates ls)
-  (fold-right (lambda (elem ret)
-                (if (string=? elem (first ret))
-                    ret
-                    (cons elem ret)))
-              (list (last ls))
-              ls))
+  (if (null? ls)
+      '()
+      (fold-right
+       (lambda (elem ret)
+         (if (string=? elem (first ret))
+             ret
+             (cons elem ret)))
+       (list (last ls))
+       ls)))
 
 ;;; Returns name of a cached file for BASENAME
 (define (get-cache-name basename)
