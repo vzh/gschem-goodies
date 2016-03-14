@@ -19,7 +19,10 @@
 ;;; Enables symbol caching using DIRNAME as the cache directory
 (define (enable-symbol-cache dirname)
   (and (string? dirname)
-       (set! cache-dir-name dirname)))
+       (or (access? dirname W_OK)
+           (and (mkdir dirname)
+                (access? dirname W_OK))
+           (set! cache-dir-name dirname))))
 
 ;;; Disables symbol caching
 (define (disable-symbol-cache)
