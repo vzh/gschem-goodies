@@ -3,7 +3,8 @@ sym-cache.scm
   * Caching should not happen on "File->Save as" or on
     "File->Save" (for new files) if the user cancelled the
     operation.
-  * Automatically create cache directory if it does not exist and
-    warn the user more explicitly (using gschem-msg) about that
-  * Add a function to set cache directory explicitly and do
-    nothing (or write something in the log) if it doesn't exist
+  * Add a function to return the current cache dir name.
+  * Report cache directory name in the log.
+  * Report if and where caching is enabled/disabled.
+  * If files are saved in another directory, the cache directory
+    should be relative to it.
