@@ -97,8 +97,7 @@
 
 ;;; Save all symbols of PAGE to cache directory
 (define (cache-page-symbols page)
-  (if (is-symbol-cache-enabled?)
-      (for-each
-       cache-symbol
-       (get-unique-component-names page))
-      (gschem-log "Symbol caching is disabled.\n")))
+  (and (is-symbol-cache-enabled?)
+       (for-each
+        cache-symbol
+        (get-unique-component-names page))))
