@@ -92,7 +92,7 @@
 ;;; Get a list of unique component basenames of PAGE
 (define (get-unique-component-names page)
   (let* ((components (filter component? (page-contents page)))
-         (basenames (map component-basename components))         )
+         (basenames (map component-basename components)))
     (delete-adjacent-duplicates (sort basenames string<?))))
 
 ;;; Save all symbols of PAGE to cache directory
