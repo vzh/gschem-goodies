@@ -1,7 +1,17 @@
 ;;; Warning: the functions below will silently overwrite your symbols
 ;;; in the directory specified in the 'cache-dir-name' variable
 
-(use-modules (geda page) (geda object) (srfi srfi-1))
+(define-module (gschem symbol cache)
+  #:use-module (geda page)
+  #:use-module (geda object)
+  #:use-module (geda attrib)
+  #:use-module (gschem window)
+  #:use-module (srfi srfi-1)
+
+  #:export (enable-symbol-cache
+            disable-symbol-cache
+            is-symbol-cache-enabled?
+            cache-page-symbols))
 
 ;;; Cache dir name
 (define cache-dir-name #f)
@@ -92,20 +102,3 @@
        cache-symbol
        (get-unique-component-names page))
       (gschem-log "Symbol caching is disabled.\n")))
-
-;;; Save all symbols of all open pages to cache directory
-(define (cache-symbols)
-  (for-each cache-page-symbols (active-pages)))
-
-;;; Use hooks to cache symbols automatically after page saving
-(add-hook!
- post-save-page-hook
- (lambda ()
-   (gschem-log "Caching used symbols.\n")
-   (cache-page-symbols (active-page))))
-
-(add-hook!
- post-save-page-as-hook
- (lambda ()
-   (gschem-log "Caching used symbols.\n")
-   (cache-page-symbols (active-page))))
