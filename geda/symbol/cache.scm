@@ -20,8 +20,8 @@
   (and (string? dirname)
        (or (access? dirname W_OK)
            (and (mkdir dirname)
-                (access? dirname W_OK))
-           (set! cache-dir-name dirname))))
+                (access? dirname W_OK)))
+       (set! cache-dir-name dirname)))
 
 ;;; Disables symbol caching
 (define (disable-symbol-cache)
