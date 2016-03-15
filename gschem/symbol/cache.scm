@@ -4,8 +4,6 @@
   #:use-module (geda symbol cache)
   #:use-module (gschem window)
   #:use-module (gschem goodies hook)
-  ;; #:replace
-  ;; (cache-page-symbols)
   #:re-export (enable-symbol-cache
                disable-symbol-cache
                is-symbol-cache-enabled?))
@@ -30,5 +28,3 @@
 ;;; Use hooks to cache symbols automatically after page saving
 (add-hook! post-save-page-hook cache-page-symbols)
 (add-hook! post-save-page-as-hook cache-page-symbols)
-
-(export! cache-page-symbols)
