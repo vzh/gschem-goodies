@@ -7,8 +7,8 @@
   #:use-module (geda attrib)
   #:use-module (srfi srfi-1)
 
-  #:export (enable-symbol-cache
-            disable-symbol-cache
+  #:export (enable-symbol-cache!
+            disable-symbol-cache!
             is-symbol-cache-enabled?
             cache-page-symbols))
 
@@ -16,7 +16,7 @@
 (define cache-dir-name #f)
 
 ;;; Enables symbol caching using DIRNAME as the cache directory
-(define (enable-symbol-cache dirname)
+(define (enable-symbol-cache! dirname)
   (and (string? dirname)
        (or (access? dirname W_OK)
            (and (mkdir dirname)
@@ -24,7 +24,7 @@
        (set! cache-dir-name dirname)))
 
 ;;; Disables symbol caching
-(define (disable-symbol-cache)
+(define (disable-symbol-cache!)
   (set! cache-dir-name #f))
 
 ;;; Predicate to check if symbol caching is enabled

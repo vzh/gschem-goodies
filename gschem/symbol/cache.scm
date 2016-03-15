@@ -4,8 +4,8 @@
   #:use-module (geda symbol cache)
   #:use-module (gschem window)
   #:use-module (gschem goodies hook)
-  #:re-export (enable-symbol-cache
-               disable-symbol-cache
+  #:re-export (enable-symbol-cache!
+               disable-symbol-cache!
                is-symbol-cache-enabled?))
 
 ;;; Since gschem doesn't export embedded procedures properly, we
