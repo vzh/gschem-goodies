@@ -14,10 +14,14 @@
 ;;; some day.
 (define log! (@@ (guile-user) gschem-log))
 
+(define (start-log-message)
+  (log!
+   (format #f "Caching used symbols in ~S.\n" (symbol-cache-dir))))
+
 ;;; Redefine cache-page-symbols
 (define (cache!)
   (if (is-symbol-cache-enabled?)
-      (begin (log! "Caching used symbols...\n")
+      (begin (start-log-message)
              (if (cache-page-symbols (active-page))
                  (log! "... caching completed.\n")
                  (log! "Something went wrong with symbol caching.\nCheck log for more information.\n")))
