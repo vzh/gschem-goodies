@@ -1,106 +1,34 @@
-;;; Warning: the functions below will silently overwrite your symbols
-;;; in the directory specified in the 'cache-dir-name' variable
-
+;;; Redefine the cache-page-symbols procedure defined in the
+;;; module (geda symbol cache)
 (define-module (gschem symbol cache)
-  #:use-module (geda page)
-  #:use-module (geda object)
-  #:use-module (geda attrib)
+  #:use-module (geda symbol cache)
   #:use-module (gschem window)
-  #:use-module (srfi srfi-1)
+  #:use-module (gschem goodies hook)
+  ;; #:replace
+  ;; (cache-page-symbols)
+  #:re-export (enable-symbol-cache
+               disable-symbol-cache
+               is-symbol-cache-enabled?))
 
-  #:export (enable-symbol-cache
-            disable-symbol-cache
-            is-symbol-cache-enabled?
-            cache-page-symbols))
+(define geda-cache-page-symbols cache-page-symbols)
 
-;;; Cache dir name
-(define cache-dir-name #f)
+;;; Since gschem doesn't export embedded procedures properly, we
+;;; won't be polite with it, either.
+;;; This temporary procedure will be replaced with a proper one
+;;; some day.
+(define log! (@@ (guile-user) gschem-log))
 
-;;; Enables symbol caching using DIRNAME as the cache directory
-(define (enable-symbol-cache dirname)
-  (and (string? dirname)
-       (or (access? dirname W_OK)
-           (and (mkdir dirname)
-                (access? dirname W_OK))
-           (set! cache-dir-name dirname))))
+;;; Redefine cache-page-symbols
+(define (cache-page-symbols)
+  (if (is-symbol-cache-enabled?)
+      (begin (log! "Caching used symbols...\n")
+             (if (geda-cache-page-symbols (active-page))
+                 (log! "... caching completed.\n")
+                 (log! "Something went wrong with symbol caching.\nCheck log for more information.\n")))
+      (log! "Caching symbols disabled.\n")))
 
-;;; Disables symbol caching
-(define (disable-symbol-cache)
-  (set! cache-dir-name #f))
+;;; Use hooks to cache symbols automatically after page saving
+(add-hook! post-save-page-hook cache-page-symbols)
+(add-hook! post-save-page-as-hook cache-page-symbols)
 
-;;; Predicate to check if symbol caching is enabled
-(define (is-symbol-cache-enabled?)
-  (not (not cache-dir-name)))
-
-;;; Stolen from the 'fold' function description in the guile info manual
-(define (delete-adjacent-duplicates ls)
-  (if (null? ls)
-      '()
-      (fold-right
-       (lambda (elem ret)
-         (if (string=? elem (first ret))
-             ret
-             (cons elem ret)))
-       (list (last ls))
-       ls)))
-
-;;; Returns name of a cached file for BASENAME
-(define (get-cache-name basename)
-  (string-append
-   cache-dir-name
-   file-name-separator-string
-   basename))
-
-;;; Outputs schematic PAGE to file NAME
-;;; Returns PAGE
-(define (page->file page name)
-  (with-output-to-file name
-    (lambda () (display (page->string page))))
-  page)
-
-;;; For some reason, the core function %attach-attrib doesn't have
-;;; an option which would let us preserve attrib color. Hence, we
-;;; do this this explicitly here.
-(define (attach-attrib-preserving-color! object attrib)
-  (let ((color (object-color attrib)))
-    (attach-attribs! object attrib)
-    (set-object-color! attrib color)))
-
-;;; Copies OBJECT to PAGE preserving with its attached attributes
-(define (copy-object-with-attachment! object #;to page)
-  (and (not (attrib-attachment object))
-       (let ((new-object (copy-object object))
-             (new-attribs (map copy-object (object-attribs object))))
-         (page-append! page new-object)
-         (when (not (null? new-attribs))
-           (apply page-append! page new-attribs)
-           ;; The following call would сorrupt attrib color info
-           ;;   (apply attach-attribs! new-object new-attribs)
-           ;; See comments for attach-attrib-preserving-color!
-           (map
-            (lambda (attrib)
-              (attach-attrib-preserving-color! new-object attrib))
-            new-attribs)))))
-
-
-;;; Saves symbol BASENAME to the cache directory
-(define (cache-symbol basename)
-  (let ((page (make-page basename))
-        (component (make-component/library basename '(0 . 0) 0 #f #f)))
-    (map (lambda (object)
-           (copy-object-with-attachment! object #;to page))
-         (component-contents component))
-    (close-page! (page->file page (get-cache-name basename)))))
-
-;;; Get a list of unique component basenames of PAGE
-(define (get-unique-component-names page)
-  (let* ((components (filter component? (page-contents page)))
-         (basenames (map component-basename components)))
-    (delete-adjacent-duplicates (sort basenames string<?))))
-
-;;; Save all symbols of PAGE to cache directory
-(define (cache-page-symbols page)
-  (and (is-symbol-cache-enabled?)
-       (for-each
-        cache-symbol
-        (get-unique-component-names page))))
+(export! cache-page-symbols)
