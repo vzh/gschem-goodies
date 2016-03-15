@@ -81,7 +81,7 @@
             (lambda (attrib)
               (attach-attrib-preserving-color! new-object attrib))
             new-attribs)))))
-                                        ;
+
 
 ;;; Saves symbol BASENAME to the cache directory
 (define (cache-symbol basename)
