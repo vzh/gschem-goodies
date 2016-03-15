@@ -9,11 +9,16 @@
 
   #:export (enable-symbol-cache!
             disable-symbol-cache!
+            symbol-cache-dir
             is-symbol-cache-enabled?
             cache-page-symbols))
 
 ;;; Cache dir name
 (define cache-dir-name #f)
+
+;;; Returns the current cache directory name or #f if it is not set.
+(define (symbol-cache-dir)
+  cache-dir-name)
 
 ;;; Enables symbol caching using DIRNAME as the cache directory
 (define (enable-symbol-cache! dirname)
