@@ -1,6 +1,8 @@
 ;;; Maintain symbol cache
 (use-modules (gschem symbol cache))
 
-;;; Enable symbol cache in the directory sym/
-(enable-symbol-cache! "sym")
+;;; Symbol cache directory
+(set-symbol-cache-dir! "sym")
+;;; Enable symbol cache
+(enable-symbol-cache!)
 

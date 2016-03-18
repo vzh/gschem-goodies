@@ -10,31 +10,53 @@
   #:export (enable-symbol-cache!
             disable-symbol-cache!
             symbol-cache-dir
+            set-symbol-cache-dir!
             is-symbol-cache-enabled?
+            is-symbol-cache-writable?
             cache-page-symbols))
+
+;;; Variables
 
 ;;; Cache dir name
 (define cache-dir-name #f)
+
+;;; If caching is allowed
+(define cache-enabled #f)
+
+
+;;; Accessors
 
 ;;; Returns the current cache directory name or #f if it is not set.
 (define (symbol-cache-dir)
   cache-dir-name)
 
-;;; Enables symbol caching using DIRNAME as the cache directory
-(define (enable-symbol-cache! dirname)
-  (and (string? dirname)
-       (or (access? dirname W_OK)
-           (and (mkdir dirname)
-                (access? dirname W_OK)))
-       (set! cache-dir-name dirname)))
+;;; Sets symbol cache directory name to NAME
+(define (set-symbol-cache-dir! name)
+  (if (string? name)
+      (set! cache-dir-name name)
+      (set! cache-dir-name #f)))
 
-;;; Disables symbol caching
+;;; Enables symbol cache
+(define (enable-symbol-cache!)
+  (set! cache-enabled #t))
+
+;;; Disables symbol cache
 (define (disable-symbol-cache!)
-  (set! cache-dir-name #f))
+  (set! cache-enabled #f))
 
-;;; Predicate to check if symbol caching is enabled
+;;; Predicates
+
+;;; Checks if symbol cache is enabled
 (define (is-symbol-cache-enabled?)
-  (not (not cache-dir-name)))
+  cache-enabled)
+
+;;; Checks if symbol cache directory is valid and writable
+(define (is-symbol-cache-writable?)
+  (and cache-dir-name
+       (or
+        (access? cache-dir-name W_OK)
+        (and (mkdir cache-dir-name)
+             (access? cache-dir-name W_OK)))))
 
 ;;; Stolen from the 'fold' function description in the guile info manual
 (define (delete-adjacent-duplicates ls)
