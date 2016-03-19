@@ -7,6 +7,7 @@
   #:re-export (enable-symbol-cache!
                disable-symbol-cache!
                symbol-cache-dir
+               symbol-cache-path
                set-symbol-cache-dir!))
 
 ;;; Since gschem doesn't export embedded procedures properly, we
@@ -17,7 +18,9 @@
 
 (define (start-log-message)
   (log!
-   (format #f "Caching used symbols in ~S.\n" (symbol-cache-dir))))
+   (format #f "Caching used symbols in ~S (~S).\n"
+           (symbol-cache-dir)
+           (symbol-cache-path))))
 
 ;;; Redefine cache-page-symbols
 (define (cache!)

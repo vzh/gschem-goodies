@@ -10,6 +10,7 @@
   #:export (enable-symbol-cache!
             disable-symbol-cache!
             symbol-cache-dir
+            symbol-cache-path
             set-symbol-cache-dir!
             is-symbol-cache-enabled?
             is-symbol-cache-writable?
@@ -17,8 +18,11 @@
 
 ;;; Variables
 
-;;; Cache dir name
+;;; Cache directory name
 (define cache-dir-name #f)
+
+;;; Absolute path to the cache directory
+(define cache-dir-path #f)
 
 ;;; If caching is allowed
 (define cache-enabled #f)
@@ -30,11 +34,25 @@
 (define (symbol-cache-dir)
   cache-dir-name)
 
+;;; Returns absolute path for the cache directory
+(define (symbol-cache-path)
+  cache-dir-path)
+
 ;;; Sets symbol cache directory name to NAME
 (define (set-symbol-cache-dir! name)
+  (define (absolute-dir-path name)
+    (if (absolute-file-name? name)
+        name
+        (string-append (getcwd)
+                       file-name-separator-string
+                       name)))
   (if (string? name)
-      (set! cache-dir-name name)
-      (set! cache-dir-name #f)))
+      (let ((abs-name (absolute-dir-path name)))
+        (set! cache-dir-name name)
+        (set! cache-dir-path abs-name))
+      (begin
+        (set! cache-dir-name #f)
+        (set! cache-dir-path #f))))
 
 ;;; Enables symbol cache
 (define (enable-symbol-cache!)
@@ -52,11 +70,11 @@
 
 ;;; Checks if symbol cache directory is valid and writable
 (define (is-symbol-cache-writable?)
-  (and cache-dir-name
+  (and cache-dir-path
        (or
-        (access? cache-dir-name W_OK)
-        (and (mkdir cache-dir-name)
-             (access? cache-dir-name W_OK)))))
+        (access? cache-dir-path W_OK)
+        (and (mkdir cache-dir-path)
+             (access? cache-dir-path W_OK)))))
 
 ;;; Stolen from the 'fold' function description in the guile info manual
 (define (delete-adjacent-duplicates ls)
@@ -73,7 +91,7 @@
 ;;; Returns name of a cached file for BASENAME
 (define (get-cache-name basename)
   (string-append
-   cache-dir-name
+   cache-dir-path
    file-name-separator-string
    basename))
 
