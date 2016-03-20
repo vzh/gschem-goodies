@@ -6,6 +6,7 @@
   #:use-module (geda object)
   #:use-module (geda attrib)
   #:use-module (srfi srfi-1)
+  #:use-module (geda file io)
 
   #:export (enable-symbol-cache!
             disable-symbol-cache!
@@ -94,13 +95,6 @@
    cache-dir-path
    file-name-separator-string
    basename))
-
-;;; Outputs schematic PAGE to file NAME
-;;; Returns PAGE
-(define (page->file page name)
-  (with-output-to-file name
-    (lambda () (display (page->string page))))
-  page)
 
 ;;; For some reason, the core function %attach-attrib doesn't have
 ;;; an option which would let us preserve attrib color. Hence, we
