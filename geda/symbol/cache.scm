@@ -2,10 +2,10 @@
 ;;; in the directory specified in the 'cache-dir-name' variable
 
 (define-module (geda symbol cache)
+  #:use-module (srfi srfi-1)
   #:use-module (geda page)
   #:use-module (geda object)
   #:use-module (geda attrib)
-  #:use-module (srfi srfi-1)
   #:use-module (geda file io)
 
   #:export (enable-symbol-cache!
