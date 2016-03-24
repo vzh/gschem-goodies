@@ -1,3 +1,4 @@
+;;; coding: utf-8
 (define-module (geda file io)
   #:export (page->file)
   #:export (file->page)
