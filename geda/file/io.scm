@@ -1,8 +1,7 @@
 ;;; coding: utf-8
 (define-module (geda file io)
-  #:export (page->file)
-  #:export (file->page)
   #:use-module (geda page)
+  #:export (page->file file->page)
   #:use-module ((ice-9 rdelim)
                 #:select (read-string)
                 #:prefix rdelim:))
