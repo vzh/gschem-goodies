@@ -1,6 +1,6 @@
 gschem schematic/symbol -> scheme script
 
-Usage: gaf shell gsch2scheme.scm schematic-name.sch scheme-name.scm [scale-factor]
+Usage: gaf shell sch2scheme.scm schematic-name.sch scheme-name.scm [scale-factor]
 
 scheme-name.scm then contains script which can reproduce the
 initial schematic. Running it using 'gaf shell scheme-name.scm'
