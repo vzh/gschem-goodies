@@ -1,13 +1,9 @@
 ; Script for converting gschem schematic/symbol into Guile script, suitable
 ; for generating code which can be used to generate sets of symbols
 
-(use-modules (geda page))
-(use-modules (geda object))
-
-; Load files from current directory
-(add-to-load-path ".")
-; io procedures
-(load-from-path "schrw.scm")
+(use-modules (geda page)
+             (geda object)
+             (geda file io))
 
 (define scale 1)
 
@@ -245,7 +241,7 @@
         (display "(define object-list (list\n")
 
         ;body
-        (for-each output-scheme-string (page-contents (schematic-file->page input)))
+        (for-each output-scheme-string (page-contents (file->page input)))
 
         ;footer
         ;;object list end
