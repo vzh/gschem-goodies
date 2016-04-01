@@ -122,51 +122,56 @@
 
 ;;; Defines default symbol library list.
 (define %default-symbol-library (make-default-dir-list))
-(define %symbol-library '())
 
-;;; Resets the symbol library.
-(define (reset-symbol-library!)
+;;; Sets internal component library from the list LS throwing out
+;;; its previous value. Returns LS.
+(define (%set-component-library! ls)
   (reset-component-library!)
-  (set! %symbol-library '()))
-
-;;; Sets the symbol library from the list LS throwing out its
-;;; previous value.
-(define (set-symbol-library! ls)
-  (reset-symbol-library!)
   (for-each
    (lambda (entry)
      (if (pair? entry)
          (component-library-append! (car entry) (cdr entry))
          (component-library-append! entry)))
    ls)
-  (set! %symbol-library ls))
+  ls)
+
+;;; This variable should always contain the current list of
+;;; libraries in the symbol library.
+(define %symbol-library
+  (%set-component-library! %default-symbol-library))
+
+;;; Sets symbol library contents from the list LS. Returns the
+;;; symbol library list.
+(define (set-symbol-library! ls)
+  (set! %symbol-library (%set-component-library! ls))
+  %symbol-library)
+
+;;; Empties the symbol library. Returns '().
+(define (reset-symbol-library!)
+  (set-symbol-library! '()))
 
 ;;; Appends ARGS which must be a set of symbol library entries to
-;;; the symbol library list.
+;;; the symbol library list. Returns the updated symbol library
+;;; list.
 (define* (symbol-library-append! . args)
-  (when (not (null? args))
-    (for-each
-     (lambda (entry)
-     (if (pair? entry)
-         (component-library-append! (car entry) (cdr entry))
-         (component-library-append! entry)))
-     args)
-    (set! %symbol-library (append %symbol-library args))))
+  (if (null? args)
+      %symbol-library
+      (set-symbol-library! (append %symbol-library args))))
 
 ;;; Removes ARGS which must be a set of symbol library entries
-;;; from the symbol library list.
+;;; from the symbol library list. Returns the updated symbol
+;;; library list.
 (define* (symbol-library-remove! . args)
-  (when (not (null? args))
-    (set-symbol-library!
-     (filter-map
-      (lambda (x)
-        (and (not (library-list-member x args))
-             x))
-      %symbol-library))))
+  (if (null? args)
+      %symbol-library
+      (set-symbol-library!
+       (filter-map
+        (lambda (x)
+          (and (not (library-list-member x args))
+               x))
+        %symbol-library))))
 
-;;; Reloads symbol library.
+;;; Reloads symbol library. Returns the current symbol library
+;;; list.
 (define (reload-symbol-library!)
   (set-symbol-library! %symbol-library))
-
-;;; Symbol library initialization.
-(set-symbol-library! %default-symbol-library)
