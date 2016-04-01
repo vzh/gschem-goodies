@@ -21,6 +21,13 @@
 (define reset-component-library! (@@ (guile-user) reset-component-library))
 
 
+;;; This list is used just in order to assign initial names to
+;;; default library symbol directories. It has been taken from
+;;; geda.scm in the geda-gaf package. This is just a hack, since
+;;; the set of geda-gaf library directories may change in
+;;; time. The more appropriate approach would be using of some
+;;; files with library meta-info residing in the directories of
+;;; corresponding libraries.
 (define default-lib-list
     '(
       ;; Generic symbols
@@ -74,12 +81,18 @@
       ("misc" . "Misc. unsorted symbols")
       ))
 
+;;; Returns the directory part of a library entry X.
 (define (library-list-entry-directory x)
   (if (pair? x) (car x) x))
 
+;;; Returns the name part of a library entry X.
 (define (library-list-entry-name x)
   (if (pair? x) (cdr x) ""))
 
+;;; Checks if the entry X is the member of library list LS and
+;;; returns the corresponding library entry if it does, otherwise
+;;; returns #f. Checking is carried out only for the directory
+;;; part of the entry X.
 (define (library-list-member x ls)
   (let loop ((dir (library-list-entry-directory x))
              (ls ls))
@@ -90,6 +103,9 @@
                   (car ls))
              (loop dir (cdr ls))))))
 
+;;; Creates the list of default libraries by scanning the
+;;; directory of geda-gaf's default libraries and assigning names
+;;; to them using the list default-lib-list defined above.
 (define (make-default-dir-list)
   (map
    (lambda (name)
@@ -104,13 +120,17 @@
               (not (or (string=? "." name)
                        (string=? ".." name)))))))
 
+;;; Defines default symbol library list.
 (define %default-symbol-library (make-default-dir-list))
 (define %symbol-library '())
 
+;;; Resets the symbol library.
 (define (reset-symbol-library!)
   (reset-component-library!)
   (set! %symbol-library '()))
 
+;;; Sets the symbol library from the list LS throwing out its
+;;; previous value.
 (define (set-symbol-library! ls)
   (reset-symbol-library!)
   (for-each
@@ -121,6 +141,8 @@
    ls)
   (set! %symbol-library ls))
 
+;;; Appends ARGS which must be a set of symbol library entries to
+;;; the symbol library list.
 (define* (symbol-library-append! . args)
   (when (not (null? args))
     (for-each
@@ -131,7 +153,8 @@
      args)
     (set! %symbol-library (append %symbol-library args))))
 
-
+;;; Removes ARGS which must be a set of symbol library entries
+;;; from the symbol library list.
 (define* (symbol-library-remove! . args)
   (when (not (null? args))
     (set-symbol-library!
@@ -141,8 +164,9 @@
              x))
       %symbol-library))))
 
+;;; Reloads symbol library.
 (define (reload-symbol-library!)
   (set-symbol-library! %symbol-library))
 
-;;; Symbol library initialization
+;;; Symbol library initialization.
 (set-symbol-library! %default-symbol-library)
