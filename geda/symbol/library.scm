@@ -90,7 +90,7 @@
                   (car ls))
              (loop dir (cdr ls))))))
 
-(define (populate-default-dir!)
+(define (make-default-dir-list)
   (map
    (lambda (name)
      (let ((abs-dir-name (build-path geda-sym-path name))
@@ -104,7 +104,7 @@
               (not (or (string=? "." name)
                        (string=? ".." name)))))))
 
-(define %default-symbol-library (populate-default-dir!))
+(define %default-symbol-library (make-default-dir-list))
 (define %symbol-library '())
 
 (define (reset-symbol-library!)
