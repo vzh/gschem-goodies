@@ -15,11 +15,12 @@
 ;;; won't be polite with it, either.
 ;;; This temporary procedure will be replaced with a proper one
 ;;; some day.
+(define geda-sym-path (@@ (guile-user) geda-sym-path))
+(define build-path (@@ (guile-user) build-path))
 (define component-library-append! (@@ (guile-user) component-library))
 (define reset-component-library! (@@ (guile-user) reset-component-library))
 
 
-(define geda-data-path (car (sys-data-dirs)))
 (define default-lib-list
     '(
       ;; Generic symbols
@@ -88,14 +89,6 @@
                         (library-list-entry-directory (car ls)))
                   (car ls))
              (loop dir (cdr ls))))))
-
-(define (build-path first . rest)
-  (if (null? rest) first
-      (apply build-path
-	     (append (list (string-append first file-name-separator-string (car rest))) 
-		     (cdr rest)))))
-
-(define geda-sym-path (build-path geda-data-path "sym"))
 
 (define (populate-default-dir!)
   (map
