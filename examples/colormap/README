@@ -1,0 +1,28 @@
+gschem script for colormap configuration
+========================================
+
+Start it using:
+
+  gschem -s colormap.scm
+
+Some keys will be redefined, you'll see a dialog prompting you
+about things you can do.
+
+Change the colormap and save it. gschem uses three colormaps
+(display-color-map, display-outline-color-map, and
+print-color-map) and you can produce them all. Then, in order to
+load it every time on gschem start-up, add something like
+
+  (load "/path/to/my-colormap.scm")
+
+into your gschemrc.
+
+Probably the simplest way is to move the produced colormap scripts
+into your ~/.gEDA directory and add in ~/.gEDA/gschemrc the lines
+as follows:
+  (load "display-color-map.scm")
+  (load "display-outline-color-map.scm")
+  (load "print-color-map.scm")
+
+Apparently, you have to use the file names you've saved your
+colormaps to.
