@@ -3,7 +3,8 @@
 (use-modules (srfi srfi-1)
              (ice-9 match)
              (ice-9 regex)
-             (ice-9 pretty-print))
+             (ice-9 pretty-print)
+             (geda page))
 
 ;;; Regex to check if a value is in the correct RGB or RGBA format.
 (define regex-hex (make-regexp "^#[0-9a-f]*$"))
