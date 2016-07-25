@@ -223,6 +223,8 @@
 (bind-keys! current-keymap "<Shift>s" &save-colormap-as)
 (bind-keys! current-keymap "space" &edit-select-all)
 
+(view-zoom-extents)
+
 (gschem-msg
  (format #f "
 Hover the cursor over an attribute and
