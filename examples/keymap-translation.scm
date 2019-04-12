@@ -2,7 +2,8 @@
 
 ;;; Hint: To define key names run xev.
 
-(use-modules (ice-9 regex))
+(use-modules (ice-9 regex)
+             (gschem keymap))
 
 ;;; Cyrillic jcuken keymap for gschem
 (define en-ru-jcuken
